@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { User } from '../services/intefaces/user';
 import userService from '../services/auth_service';
+import { AxiosError } from 'axios';
 
 const schema = z.object({
     username: z
@@ -26,20 +27,37 @@ type RegisterFormData = z.infer<typeof schema>
 const RegistrationForm: FC = () => {
     const { register, handleSubmit, formState: { errors } }
     = useForm<RegisterFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
+    const [error, setError] = useState<string | null>(null); // State for error message
+
 
     const onSubmit = (data: RegisterFormData) => {
-        console.log(data)
-        const user: User = {
-            username: data.username,
-            email: data.email,
-            password: data.password,
-        }
-        const { request } = userService.register(user)
-        request.then((response) => {
-            console.log(response.data)
-        }).catch((error) => {
-            console.error(error)
-        })   
+        try {
+            const user: User = {
+                username: data.username,
+                email: data.email,
+                password: data.password,
+            }
+            const { request } = userService.register(user)
+            request.then((data) => {
+                const { request } = userService.login(user)
+                request.then((response) => {
+                    localStorage.setItem("authToken", response.data.accessToken);
+
+                });
+
+                navigate("/");
+            })
+            setError(null);
+        } catch (err: any) {
+            console.log(err)
+            if (err.response) {
+                setError(err.response?.data?.message || "Something went wrong!");
+            } else if (err.request) {
+                setError("Network error. Please try again later.");
+            } else {
+                setError("An unexpected error occurred. Please try again.");
+            } 
+       } 
     }
 
     return (
@@ -72,6 +90,9 @@ const RegistrationForm: FC = () => {
                     <label>password:</label>
                     <input {...register("password")} type="password" className='form-control' />
                     {errors.password && <p className='text-danger'>{errors.password.message}</p>}
+
+                    {error && <p style={{ color: "red" }}>{error}</p>}
+
                     <button type="submit" className="btn btn-outline-primary mt-3" >Register</button>
                 </div>
             </div>
