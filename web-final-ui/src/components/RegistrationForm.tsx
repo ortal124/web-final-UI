@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { User } from '../services/intefaces/user';
 import userService from '../services/auth_service';
-import { AxiosError } from 'axios';
+import "../styles/RegistrationForm.css";
 
 const schema = z.object({
     username: z
@@ -41,11 +41,11 @@ const RegistrationForm: FC = () => {
             request.then((data) => {
                 const { request } = userService.login(user)
                 request.then((response) => {
-                    localStorage.setItem("authToken", response.data.accessToken);
+                    //localStorage.setItem("authToken", response.data.accessToken);
 
                 });
 
-                navigate("/");
+                //navigate("/");
             })
             setError(null);
         } catch (err: any) {
@@ -61,42 +61,36 @@ const RegistrationForm: FC = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} >
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-                width: '100vw'
-            }}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    backgroundColor: 'lightgray',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    width: '50%',
-                    justifyContent: 'center',
-                    gap: '5px'
-                }}>
-                    <h2 style={{ alignSelf: 'center' }}>Registration Form</h2>
-                    <label>username:</label>
-                    <input {...register("username")} type="text" className='form-control' />
-                    {errors.username && <p className='text-danger'>{errors.username.message}</p>}
-                    <label>email:</label>
-                    <input {...register("email")} type="text" className='form-control' />
-                    {errors.email && <p className='text-danger'>{errors.email.message}</p>}
-                    <label>password:</label>
-                    <input {...register("password")} type="password" className='form-control' />
-                    {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-
-                    <button type="submit" className="btn btn-outline-primary mt-3" >Register</button>
-                </div>
+        <div className="container">
+            <div className="welcome-container">
+                <h2>Welcome Back!</h2>
+                <p>To keep connected with us please login with your personal info</p>
+                <button className="btn-outline">Sign In</button>
             </div>
-        </form>
+            <div className="form-container">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <h2>Create Account</h2>
+                    <div className="social-icons">
+                        <button className="social-btn">f</button>
+                        <button className="social-btn">G+</button>
+                        <button className="social-btn">in</button>
+                    </div>
+                    <p>or use your email for registration:</p>
+                    <input {...register("username")} type="text" className="input" placeholder="Name" />
+                    {errors.username && <p className="error">{errors.username.message}</p>}
+                    
+                    <input {...register("email")} type="text" className="input" placeholder="Email" />
+                    {errors.email && <p className="error">{errors.email.message}</p>}
+                    
+                    <input {...register("password")} type="password" className="input" placeholder="Password" />
+                    {errors.password && <p className="error">{errors.password.message}</p>}
+                    
+                    {error && <p className="error">{error}</p>}
+                    
+                    <button type="submit" className="btn">Sign Up</button>
+                </form>
+            </div>
+        </div>
     )
 }
 
