@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { User } from '../services/intefaces/user';
 import userService from '../services/auth_service';
-import "../styles/RegistrationForm.css";
+import "../styles/auth.css";
 
 const schema = z.object({
     username: z
@@ -71,9 +71,7 @@ const RegistrationForm: FC = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h2>Create Account</h2>
                     <div className="social-icons">
-                        <button className="social-btn">f</button>
                         <button className="social-btn">G+</button>
-                        <button className="social-btn">in</button>
                     </div>
                     <p>or use your email for registration:</p>
                     <input {...register("username")} type="text" className="input" placeholder="Name" />
