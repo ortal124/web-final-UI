@@ -138,3 +138,8 @@
     font-size: 12px;
     margin-top: 5px;
 }
+
+.btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

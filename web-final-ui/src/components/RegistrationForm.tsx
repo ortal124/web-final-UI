@@ -27,7 +27,7 @@ type RegisterFormData = z.infer<typeof schema>
 
 const RegistrationForm: FC = () => {
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } }
+    const { register, handleSubmit, formState: { errors, isValid } }
     = useForm<RegisterFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
     const [error, setError] = useState<string | null>(null); // State for error message
 
@@ -87,7 +87,7 @@ const RegistrationForm: FC = () => {
                     
                     {error && <p className="error">{error}</p>}
                     
-                    <button type="submit" className="btn">Sign Up</button>
+                    <button type="submit" className="btn" disabled={!isValid}>Sign Up</button>
                 </form>
             </div>
         </div>
