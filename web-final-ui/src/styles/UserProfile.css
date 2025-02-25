@@ -1,9 +1,9 @@
-/* עיצוב כללי */
+
 html, body {
     margin: 0;
     padding: 0;
-    height: 100vh; /* העמוד כולו יתפוס את גובה המסך */
-    overflow: hidden; /* מונע גלילה כללית */
+    height: 100vh; 
+    overflow: hidden; 
     display: flex;
     justify-content: center;
     background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
@@ -18,10 +18,10 @@ html, body {
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
-    height: 100vh; /* כל העמוד */
+    height: 100vh; 
 }
 
-/* אזור הפרופיל */
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -55,19 +55,19 @@ html, body {
     margin-bottom: 10px;
 }
 
-/* גריד של פוסטים */
+
 .posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* התאמה אוטומטית */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
     gap: 10px;
     width: 100%;
-    max-width: 900px; /* למנוע שהם יתפשטו יותר מדי */
-    max-height: 600px; /* מקסימום גובה לפיד */
-    overflow-y: auto; /* גלילה אנכית */
-    padding-right: 10px; /* רווח נוסף לנוחות הגלילה */
-    border: 1px solid #ddd; /* גבול לפיד */
+    max-width: 900px; 
+    max-height: 600px; 
+    overflow-y: auto; 
+    padding-right: 10px; 
+    border: 1px solid #ddd; 
     border-radius: 5px;
-    background-color: #f7f7f7; /* רקע בהיר לפיד */
+    background-color: #f7f7f7; 
 }
 
 .post-item {

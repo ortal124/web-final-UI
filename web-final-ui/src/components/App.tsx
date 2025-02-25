@@ -16,11 +16,10 @@ const App: React.FC = () => {
     <Router>
       <div className="app-container">
         <Routes>
-          {/* מסכים ללא סרגל צד */}
           <Route path="/login" element={<LogInForm />} />
           <Route path="/register" element={<RegistrationForm />} />
 
-          {/* מסכים עם סרגל צד */}
+          {}
           <Route
             path="/*"
             element={
