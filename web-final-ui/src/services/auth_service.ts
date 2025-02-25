@@ -3,7 +3,7 @@ import { User } from "./intefaces/user";
 
 export { CanceledError }
 
-const register = (user: User) => {
+const register = (user: FormData) => {
     const abortController = new AbortController()
     const request = apiClient.post<User>('/auth/register',
         user,

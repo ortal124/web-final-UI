@@ -43,36 +43,22 @@ const RegistrationForm: FC = () => {
         }
     };
 
-    const onSubmit = (data: RegisterFormData) => {
+    const onSubmit = async (data: RegisterFormData) => {
         try {
-            const user: User = {
-                username: data.username,
-                email: data.email,
-                password: data.password,
+            const formData = new FormData();
+            formData.append('username', data.username);
+            formData.append('email', data.email);
+            formData.append('password', data.password);
+            if (profileImage) {
+                formData.append('profileImage', profileImage);
             }
-            
-            const { request } = userService.register(user)
-            request.then((data) => {
-                const { request } = userService.login(user)
-                request.then((response) => {
-                    //localStorage.setItem("authToken", response.data.accessToken);
-
-                });
-
-                //navigate("/");
-            })
-            setError(null);
+    
+            const response = await userService.register(formData);
+            navigate('/');
         } catch (err: any) {
-            console.log(err)
-            if (err.response) {
-                setError(err.response?.data?.message || "Something went wrong!");
-            } else if (err.request) {
-                setError("Network error. Please try again later.");
-            } else {
-                setError("An unexpected error occurred. Please try again.");
-            } 
-       } 
-    }
+            setError(err.response?.data?.message || "Something went wrong!");
+        }
+    };
 
     return (
         <div className="container">
