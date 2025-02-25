@@ -143,3 +143,36 @@
     background: #ccc;
     cursor: not-allowed;
 }
+
+.upload-btn {
+    background: #1ABC9C;
+    border: none;
+    padding: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 20%;
+    margin-top: 10px;
+}
+
+.upload-btn:hover {
+    background: #16A085;
+}
+
+.image-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.profile-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1ABC9C;
+}

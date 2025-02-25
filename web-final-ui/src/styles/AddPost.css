@@ -28,24 +28,6 @@
     height: 100px;
 }
 
-.upload-btn {
-    background: #1ABC9C;
-    border: none;
-    padding: 12px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 30px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-    transition: 0.3s;
-}
-
-.upload-btn:hover {
-    background: #16A085;
-}
-
 .error {
     color: red;
     font-size: 12px;

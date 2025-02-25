@@ -21,6 +21,7 @@ const schema = z.object({
         .string()
         .nonempty("Email is required")
         .email("Email must be in a valid format"),
+    profileImage: z.instanceof(File).optional(),
 });
 
 type RegisterFormData = z.infer<typeof schema>
@@ -30,7 +31,17 @@ const RegistrationForm: FC = () => {
     const { register, handleSubmit, formState: { errors, isValid } }
     = useForm<RegisterFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
     const [error, setError] = useState<string | null>(null); // State for error message
+    const [profileImage, setProfileImage] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
 
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            setProfileImage(file);
+            setPreview(URL.createObjectURL(file));
+        }
+    };
 
     const onSubmit = (data: RegisterFormData) => {
         try {
@@ -39,6 +50,7 @@ const RegistrationForm: FC = () => {
                 email: data.email,
                 password: data.password,
             }
+            
             const { request } = userService.register(user)
             request.then((data) => {
                 const { request } = userService.login(user)
@@ -76,6 +88,18 @@ const RegistrationForm: FC = () => {
                         <button className="social-btn">G+</button>
                     </div>
                     <p>or use your email for registration:</p>
+                    <input type="file" onChange={handleFileChange} accept="image/*" style={{ display: "none" }}  id="fileInput"  />
+                    {preview && (
+                        <div className="image-preview-container">
+                            <img src={preview} alt="Profile Preview" className="profile-preview" />
+                        </div>
+                    )}
+                    <button 
+                        type="button" 
+                        className="upload-btn" 
+                        onClick={() => document.getElementById("fileInput")?.click()}>
+                        {preview ? "Change Image" : "Upload Image"}
+                    </button>
                     <input {...register("username")} type="text" className="input" placeholder="Name" />
                     {errors.username && <p className="error">{errors.username.message}</p>}
                     
