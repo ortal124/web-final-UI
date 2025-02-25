@@ -1,0 +1,114 @@
+/* עיצוב כללי */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* העמוד כולו יתפוס את גובה המסך */
+    overflow: hidden; /* מונע גלילה כללית */
+    display: flex;
+    justify-content: center;
+    background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
+}
+
+.feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* כרטיסי פוסטים */
+.post-card {
+    width: 100%;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* כותרת עם שם היוזר */
+.post-header {
+    display: flex;
+    justify-content: flex-start;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #0077cc;
+    background-color: #eaeaea;
+    border-radius: 5px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+/* גודל תמונה מותאם - לא נחתכת */
+.post-image {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: contain; /* שומר על פרופורציות במקום לחתוך */
+    border-radius: 5px;
+}
+
+/* עיצוב ציטוט */
+.post-quote {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* אזור פעולות */
+.post-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* כפתור לייק */
+.like-button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: gray; /* צבע לב רגיל */
+}
+
+.like-button.liked .heart-icon {
+    color: red; /* צבע לב אחרי לייק */
+}
+
+/* אזור תגובות */
+.comments-section {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.comment {
+    font-size: 14px;
+    background: #f1f1f1;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.comment strong {
+    color: #0077cc;
+}
+
+/* שדה הוספת תגובה */
+.comment-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
