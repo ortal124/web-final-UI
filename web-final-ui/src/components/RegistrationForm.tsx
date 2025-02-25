@@ -49,17 +49,28 @@ const RegistrationForm: FC = () => {
             formData.append('username', data.username);
             formData.append('email', data.email);
             formData.append('password', data.password);
-            if (profileImage) {
-                formData.append('profileImage', profileImage);
-            }
+            if (profileImage) formData.append('profileImage', profileImage);
     
-            const response = await userService.register(formData);
+            const { request } = await userService.register(formData);
+            const response = await request;
+    
+            localStorage.setItem("authToken", response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            
+            setError(null);
             navigate('/');
         } catch (err: any) {
-            setError(err.response?.data?.message || "Something went wrong!");
+            const errorMessage =
+                err.response?.data?.message || 
+                (err.response?.status === 400 ? "Bad Request: Please check the information you entered." :
+                err.response?.status === 500 ? "Server error. Please try again later." :
+                err.request ? "Network error. Please check your connection and try again." :
+                "An unexpected error occurred. Please try again.");
+    
+            setError(errorMessage);
         }
     };
-
+    
     return (
         <div className="container">
             <div className="welcome-container">

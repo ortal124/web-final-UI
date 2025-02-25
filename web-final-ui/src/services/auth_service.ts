@@ -1,19 +1,19 @@
 import apiClient, { CanceledError } from "./api-client";
-import { User } from "./intefaces/user";
+import { AuthData } from "./intefaces/auth";
 
 export { CanceledError }
 
 const register = (user: FormData) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/register',
+    const request = apiClient.post<AuthData>('/auth/register',
         user,
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
 }
 
-const login = (user: User) => {
+const login = (user: FormData) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/login',
+    const request = apiClient.post<AuthData>('/auth/login',
         user,
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
