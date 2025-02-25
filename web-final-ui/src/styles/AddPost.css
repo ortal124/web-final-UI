@@ -1,0 +1,53 @@
+.add-post-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.add-post-container h2 {
+    font-size: 24px;
+    color: #1ABC9C;
+    margin-bottom: 15px;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.textarea {
+    resize: none;
+    height: 100px;
+}
+
+.upload-btn {
+    background: #1ABC9C;
+    border: none;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.upload-btn:hover {
+    background: #16A085;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}

@@ -1,0 +1,64 @@
+/* סרגל צד */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    transition: background 0.3s;
+    width: 100%;
+  }
+  
+  .nav-item i {
+    margin-right: 10px;
+  }
+  
+  .nav-item:hover {
+    background: #f4f4f4;
+    border-radius: 5px;
+  }
+  
+  .logout {
+    margin-top: auto;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: red;
+    cursor: pointer;
+    padding: 12px 15px;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .logout:hover {
+    background: #ffe5e5;
+  }
+  

@@ -1,16 +1,45 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import RegistrationForm from './RegistrationForm';
+import LogInForm from './LoginForm';
+import UserFeed from './UserFeed';
+import UserProfile from './UserProfile';
+import Sidebar from "./SideBar";
 
-function App() {
+import "../styles/App.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AddPost from './AddPost';
+
+const App: React.FC = () => {
   return (
-    <GoogleOAuthProvider
-    clientId='34674964625-qi6of44fa4cm2jpfhtgd9tlu5f0ib370.apps.googleusercontent.com'>
-      <div>
-        <RegistrationForm />
+    <Router>
+      <div className="app-container">
+        <Routes>
+          {/* מסכים ללא סרגל צד */}
+          <Route path="/login" element={<LogInForm />} />
+          <Route path="/register" element={<RegistrationForm />} />
+
+          {/* מסכים עם סרגל צד */}
+          <Route
+            path="/*"
+            element={
+              <div className="main-layout">
+                <Sidebar />
+                <div className="content">
+                  <Routes>
+                    <Route path="/feed" element={<UserFeed />} />
+                    <Route path="/create-post" element={<AddPost />} />
+                    <Route path="/profile" element={<UserProfile />} />
+                  </Routes>
+                </div>
+              </div>
+            }
+          />
+        </Routes>
       </div>
-    </GoogleOAuthProvider>
+    </Router>
   );
-}
+};
 
 export default App;
