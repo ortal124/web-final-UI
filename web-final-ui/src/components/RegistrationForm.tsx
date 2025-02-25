@@ -5,6 +5,7 @@ import z from 'zod'
 import { User } from '../services/intefaces/user';
 import userService from '../services/auth_service';
 import "../styles/auth.css";
+import { useNavigate } from 'react-router-dom';
 
 const schema = z.object({
     username: z
@@ -25,6 +26,7 @@ const schema = z.object({
 type RegisterFormData = z.infer<typeof schema>
 
 const RegistrationForm: FC = () => {
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors } }
     = useForm<RegisterFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
     const [error, setError] = useState<string | null>(null); // State for error message
@@ -65,7 +67,7 @@ const RegistrationForm: FC = () => {
             <div className="welcome-container">
                 <h2>Welcome Back!</h2>
                 <p>To keep connected with us please login with your personal info</p>
-                <button className="btn-outline">Sign In</button>
+                <button className="btn-outline" onClick={() => navigate('/login')}>Sign In</button>
             </div>
             <div className="form-container">
                 <form onSubmit={handleSubmit(onSubmit)}>
