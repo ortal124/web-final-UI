@@ -14,13 +14,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const login = (userId: string, accessToken: string, refreshToken:string) => {
-    console.log("login", userId, accessToken, refreshToken);
+    localStorage.setItem("userId", userId);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);    
     setUser(userId);
   };
 
   const logout = () => {
+    localStorage.removeItem("userId");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setUser(null);

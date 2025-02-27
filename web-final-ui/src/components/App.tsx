@@ -14,7 +14,6 @@ import ProtectedRoute from "./auth-utils/ProtectedRoute";
 import { AuthProvider } from "./auth-utils/AuthContext";
 
 const App: React.FC = () => {
-  console.log("App Loaded!");
   return (
     <AuthProvider>
       <GoogleOAuthProvider clientId="34674964625-uifdk6h0kl4qiv0d88imk5f2di821hk2.apps.googleusercontent.com">
