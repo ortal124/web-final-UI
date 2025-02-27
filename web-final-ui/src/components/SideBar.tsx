@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/Sidebar.css"; // קובץ העיצוב
+import { useAuth } from "./auth-utils/AuthContext";
+import "../styles/Sidebar.css"; 
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const {logout} = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");  
+    logout();
     navigate("/login");
   };
 

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
+import { useAuth } from "./auth-utils/AuthContext";
 import userService from '../services/auth_service';
 import "../styles/auth.css";
 import { useNavigate } from 'react-router-dom';
@@ -23,15 +24,13 @@ const LoginForm: FC = () => {
     const { register, handleSubmit, formState: { errors, isValid } } 
     = useForm<LoginFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
     const [error, setError] = useState<string | null>(null);
+    const {login} = useAuth();
 
     const onSubmit = async (data: LoginFormData) => {
         try {
             const { request } = await userService.login({ username: data.username, password: data.password });
             const res = await request;
-
-            localStorage.setItem("accessToken", res.data.accessToken);
-            localStorage.setItem("refreshToken", res.data.refreshToken);   
-            
+            login(res.data.userId, res.data.accessToken, res.data.refreshToken);
             setError(null);
             navigate('/feed');
         } catch (err: any) {
@@ -48,10 +47,8 @@ const LoginForm: FC = () => {
             }
             const { request } = userService.googleSignIn(response.credential);
             const res = await request;
-
-            localStorage.setItem("accessToken", res.data.accessToken);
-            localStorage.setItem("refreshToken", res.data.refreshToken);
-
+            login(res.data.userId, res.data.accessToken, res.data.refreshToken);
+            setError(null);
             navigate('/feed');
         } catch (err: any) {
             const errorMessage = handleError(err);
