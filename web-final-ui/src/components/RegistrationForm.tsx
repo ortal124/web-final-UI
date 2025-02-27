@@ -2,10 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
-import { User } from '../services/intefaces/user';
 import userService from '../services/auth_service';
 import "../styles/auth.css";
 import { useNavigate } from 'react-router-dom';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 const schema = z.object({
     username: z
@@ -52,25 +52,43 @@ const RegistrationForm: FC = () => {
             if (profileImage) formData.append('profileImage', profileImage);
     
             const { request } = await userService.register(formData);
-            const response = await request;
-    
-            localStorage.setItem("authToken", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            
+            await request;
+                        
             setError(null);
             navigate('/');
         } catch (err: any) {
-            const errorMessage =
-                err.response?.data?.message || 
-                (err.response?.status === 400 ? "Bad Request: Please check the information you entered." :
-                err.response?.status === 500 ? "Server error. Please try again later." :
-                err.request ? "Network error. Please check your connection and try again." :
-                "An unexpected error occurred. Please try again.");
-    
-            setError(errorMessage);
+            const errorMessage = handleError(err);
+                setError(errorMessage);
         }
     };
-    
+
+    const onGoogleSuccess = async (response: CredentialResponse) => {
+     try {
+        if (!response.credential) {
+            setError("Google Sign Up Failed");
+            return;
+        }
+        const { request } = userService.googleSignUp(response.credential);
+        await request;
+        navigate('/');
+     } catch (err: any) {
+        const errorMessage = handleError(err);
+            setError(errorMessage);
+        }
+    }
+
+    const onGoogleFailure = () => {
+        setError("Google Sign Up Failed");
+    }
+
+    const handleError = (err: any) => {
+        return err.response?.data?.message ||
+            (err.response?.status === 400 ? "Bad Request: Please check the information you entered." :
+            err.response?.status === 500 ? "Server error. Please try again later." :
+            err.request ? "Network error. Please check your connection and try again." :
+            "An unexpected error occurred. Please try again.");
+    };
+
     return (
         <div className="container">
             <div className="welcome-container">
@@ -82,7 +100,7 @@ const RegistrationForm: FC = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h2>Create Account</h2>
                     <div className="social-icons">
-                        <button className="social-btn">G+</button>
+                        <GoogleLogin onSuccess= {onGoogleSuccess} onError={onGoogleFailure} />
                     </div>
                     <p>or use your email for registration:</p>
                     <input type="file" onChange={handleFileChange} accept="image/*" style={{ display: "none" }}  id="fileInput"  />

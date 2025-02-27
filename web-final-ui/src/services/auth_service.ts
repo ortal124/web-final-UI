@@ -21,7 +21,7 @@ const login = (user: FormData) => {
 
 const refresh = (refreshToken: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/refresh',
+    const request = apiClient.post<AuthData>('/auth/refresh',
         { refreshToken },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
@@ -29,7 +29,7 @@ const refresh = (refreshToken: string) => {
 
 const logout = (refreshToken: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/logout',
+    const request = apiClient.post<void>('/auth/logout',
         { refreshToken },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
@@ -37,10 +37,18 @@ const logout = (refreshToken: string) => {
 
 const googleSignIn = (credential: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/google/login',
+    const request = apiClient.post<AuthData>('/auth/google/login',
         { credential },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
 }
 
-export default { register, login, refresh, logout, googleSignIn }
+const googleSignUp = (credential: string) => {
+    const abortController = new AbortController()
+    const request = apiClient.post<AuthData>('/auth/google/register',
+        { credential },
+        { signal: abortController.signal })
+    return { request, abort: () => abortController.abort() }
+}
+
+export default { register, login, refresh, logout, googleSignIn, googleSignUp }
