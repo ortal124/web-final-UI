@@ -6,9 +6,9 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // כאן ניתן להוסיף מחיקת טוקן / ניתוק המשתמש מהמערכת
-    console.log("User logged out");
-    navigate("/login"); // ניווט לעמוד כניסה
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");  
+    navigate("/login");
   };
 
   return (
