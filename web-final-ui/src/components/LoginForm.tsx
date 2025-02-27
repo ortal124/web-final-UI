@@ -1,95 +1,103 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { FC, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import z from 'zod'
-import { User } from '../services/intefaces/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
 import userService from '../services/auth_service';
 import "../styles/auth.css";
+import { useNavigate } from 'react-router-dom';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 const schema = z.object({
     username: z
         .string()
-        .nonempty("Username is required")
-        .min(3, "Username must be at least 3 characters")
-        .regex(/^[a-zA-Z0-9]+$/, "Username can only contain letters and numbers"),
+        .nonempty("Username is required"),
     password: z
         .string()
         .nonempty("Password is required")
-        .min(5, "Password must be at least 5 characters long"),
-    email: z
-        .string()
-        .nonempty("Email is required")
-        .email("Email must be in a valid format"),
 });
 
-type RegisterFormData = z.infer<typeof schema>
+type LoginFormData = z.infer<typeof schema>;
 
 const LoginForm: FC = () => {
-    const { register, handleSubmit, formState: { errors } }
-    = useForm<RegisterFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
-    const [error, setError] = useState<string | null>(null); // State for error message
+    const navigate = useNavigate();
+    const { register, handleSubmit, formState: { errors, isValid } } 
+    = useForm<LoginFormData>({ resolver: zodResolver(schema), mode: 'onChange' });
+    const [error, setError] = useState<string | null>(null);
 
-
-    const onSubmit = (data: RegisterFormData) => {
+    const onSubmit = async (data: LoginFormData) => {
         try {
-            const user: User = {
-                username: data.username,
-                email: data.email,
-                password: data.password,
-            }
-            const { request } = userService.register(user)
-            request.then((data) => {
-                const { request } = userService.login(user)
-                request.then((response) => {
-                    //localStorage.setItem("authToken", response.data.accessToken);
+            const { request } = await userService.login({ username: data.username, password: data.password });
+            const res = await request;
 
-                });
-
-                //navigate("/");
-            })
+            localStorage.setItem("accessToken", res.data.accessToken);
+            localStorage.setItem("refreshToken", res.data.refreshToken);   
+            
             setError(null);
+            navigate('/feed');
         } catch (err: any) {
-            console.log(err)
-            if (err.response) {
-                setError(err.response?.data?.message || "Something went wrong!");
-            } else if (err.request) {
-                setError("Network error. Please try again later.");
-            } else {
-                setError("An unexpected error occurred. Please try again.");
-            } 
-       } 
-    }
+            const errorMessage = handleError(err);
+            setError(errorMessage);
+        }
+    };
+
+    const onGoogleSuccess = async (response: CredentialResponse) => {
+        try {
+            if (!response.credential) {
+                setError("Google Sign In Failed");
+                return;
+            }
+            const { request } = userService.googleSignIn(response.credential);
+            const res = await request;
+
+            localStorage.setItem("accessToken", res.data.accessToken);
+            localStorage.setItem("refreshToken", res.data.refreshToken);
+
+            navigate('/feed');
+        } catch (err: any) {
+            const errorMessage = handleError(err);
+            setError(errorMessage);
+        }
+    };
+
+    const onGoogleFailure = () => {
+        setError("Google Sign In Failed");
+    };
+
+    const handleError = (err: any) => {
+        return err.response?.data?.message ||
+            (err.response?.status === 400 ? "Invalid username or password." :
+            err.response?.status === 500 ? "Server error. Please try again later." :
+            err.request ? "Network error. Please check your connection." :
+            "An unexpected error occurred. Please try again.");
+    };
 
     return (
         <div className="container">
             <div className="welcome-container">
-                <h2>Welcome Back!</h2>
-                <p>To keep connected with us please login with your personal info</p>
-                <button className="btn-outline">Sign In</button>
+                <h2>Hello, Friend!</h2>
+                <p>New here? Create an account to join us!</p>
+                <button className="btn-outline" onClick={() => navigate('/register')}>Sign Up</button>
             </div>
             <div className="form-container">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <h2>Create Account</h2>
+                    <h2>Sign In</h2>
                     <div className="social-icons">
-                        <button className="social-btn">G+</button>
+                        <GoogleLogin onSuccess={onGoogleSuccess} onError={onGoogleFailure} />
                     </div>
-                    <p>or use your email for registration:</p>
-                    <input {...register("username")} type="text" className="input" placeholder="Name" />
+                    <p>or use your email account:</p>
+                    <input {...register("username")} type="text" className="input" placeholder="username" />
                     {errors.username && <p className="error">{errors.username.message}</p>}
-                    
-                    <input {...register("email")} type="text" className="input" placeholder="Email" />
-                    {errors.email && <p className="error">{errors.email.message}</p>}
                     
                     <input {...register("password")} type="password" className="input" placeholder="Password" />
                     {errors.password && <p className="error">{errors.password.message}</p>}
                     
                     {error && <p className="error">{error}</p>}
                     
-                    <button type="submit" className="btn">Sign Up</button>
+                    <button type="submit" className="btn" disabled={!isValid}>Sign In</button>
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;
