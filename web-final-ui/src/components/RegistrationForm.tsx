@@ -55,7 +55,7 @@ const RegistrationForm: FC = () => {
             await request;
                         
             setError(null);
-            navigate('/');
+            navigate('/login');
         } catch (err: any) {
             const errorMessage = handleError(err);
                 setError(errorMessage);
@@ -70,7 +70,7 @@ const RegistrationForm: FC = () => {
         }
         const { request } = userService.googleSignUp(response.credential);
         await request;
-        navigate('/');
+        navigate('/login');
      } catch (err: any) {
         const errorMessage = handleError(err);
             setError(errorMessage);
