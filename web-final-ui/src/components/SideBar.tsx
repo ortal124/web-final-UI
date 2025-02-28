@@ -1,14 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/Sidebar.css"; // קובץ העיצוב
+import { useAuth } from "./auth-utils/AuthContext";
+import "../styles/Sidebar.css"; 
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const {logout} = useAuth();
 
   const handleLogout = () => {
-    // כאן ניתן להוסיף מחיקת טוקן / ניתוק המשתמש מהמערכת
-    console.log("User logged out");
-    navigate("/login"); // ניווט לעמוד כניסה
+    logout();
+    navigate("/login");
   };
 
   return (

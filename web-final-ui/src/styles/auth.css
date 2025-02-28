@@ -1,12 +1,13 @@
-/* סגנון כללי */
+
 .container {
     display: flex;
     height: 100vh;
     width: 100vw;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
-/* צד ברוך הבא */
+
 .welcome-container {
     display: flex;
     flex-direction: column;
@@ -18,6 +19,7 @@
     border-radius: 10px 0 0 10px;
     text-align: center;
     padding: 20px;
+    overflow: hidden;
 }
 
 .welcome-container h2 {
@@ -47,7 +49,7 @@
     color: #1ABC9C;
 }
 
-/* צד הרשמה */
+
 .form-container {
     display: flex;
     flex-direction: column;
@@ -59,6 +61,8 @@
     text-align: center;
     padding: 40px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 40%;
 }
 
 .form-container h2 {
@@ -67,7 +71,7 @@
     margin-bottom: 10px;
 }
 
-/* אייקונים חברתיים */
+
 .social-icons {
     display: flex;
     justify-content: center;
@@ -92,7 +96,7 @@
     color: white;
 }
 
-/* שדות קלט */
+
 .input {
     width: 100%;
     padding: 12px;
@@ -100,6 +104,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    overflow: hidden;
 }
 
 .input:focus {
@@ -108,7 +113,7 @@
     box-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
 }
 
-/* כפתור הרשמה */
+
 .btn {
     background: #1ABC9C;
     border: none;
@@ -127,9 +132,47 @@
     background: #16A085;
 }
 
-/* הודעות שגיאה */
+
 .error {
     color: red;
     font-size: 12px;
     margin-top: 5px;
+}
+
+.btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.upload-btn {
+    background: #1ABC9C;
+    border: none;
+    padding: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 20%;
+    margin-top: 10px;
+}
+
+.upload-btn:hover {
+    background: #16A085;
+}
+
+.image-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.profile-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1ABC9C;
 }

@@ -1,19 +1,18 @@
-import apiClient, { CanceledError } from "./api-client";
+import apiClient from "./api-client";
 import { User } from "./intefaces/user";
+import { AuthData } from "./intefaces/auth";
 
-export { CanceledError }
-
-const register = (user: User) => {
+const register = (user: FormData) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/register',
+    const request = apiClient.post<AuthData>('/auth/register',
         user,
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
 }
 
-const login = (user: User) => {
+const login = (user: Partial<User>) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/login',
+    const request = apiClient.post<AuthData>('/auth/login',
         user,
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
@@ -21,7 +20,7 @@ const login = (user: User) => {
 
 const refresh = (refreshToken: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/refresh',
+    const request = apiClient.post<AuthData>('/auth/refresh',
         { refreshToken },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
@@ -29,7 +28,7 @@ const refresh = (refreshToken: string) => {
 
 const logout = (refreshToken: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/logout',
+    const request = apiClient.post<void>('/auth/logout',
         { refreshToken },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
@@ -37,10 +36,18 @@ const logout = (refreshToken: string) => {
 
 const googleSignIn = (credential: string) => {
     const abortController = new AbortController()
-    const request = apiClient.post<User>('/auth/google/login',
+    const request = apiClient.post<AuthData>('/auth/google/login',
         { credential },
         { signal: abortController.signal })
     return { request, abort: () => abortController.abort() }
 }
 
-export default { register, login, refresh, logout, googleSignIn }
+const googleSignUp = (credential: string) => {
+    const abortController = new AbortController()
+    const request = apiClient.post<AuthData>('/auth/google/register',
+        { credential },
+        { signal: abortController.signal })
+    return { request, abort: () => abortController.abort() }
+}
+
+export default { register, login, refresh, logout, googleSignIn, googleSignUp }
