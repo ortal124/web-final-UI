@@ -62,7 +62,6 @@ const Feed: React.FC = () => {
   const lastPostRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading) return;
-      console.log("lastPostRef");
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
