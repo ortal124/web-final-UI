@@ -13,8 +13,8 @@ const UserProfile: FC = () => {
     const [newUsername, setNewUsername] = useState(user?.username || "");
     const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
     const [oldProfileImage, setOldProfileImage] = useState<String | null>(null);
-    const [editProfileImageError, setEditProfileImageError] = useState<string | null>(null); // Error message
-    const [profileImageChanged, setProfileImageChanged] = useState(false); // To track profile image changes
+    const [editProfileImageError, setEditProfileImageError] = useState<string | null>(null);
+    const [profileImageChanged, setProfileImageChanged] = useState(false); 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
@@ -49,15 +49,17 @@ const UserProfile: FC = () => {
     };
 
     const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setOldProfileImage(user?.profileImage ?? null);
-            console.log("Old profile image:")
-            setNewProfileImage(e.target.files[0]);
-            setUser((prev) => prev ? { ...prev, profileImage: URL.createObjectURL(e.target.files[0]) } : null); // show new image
-            console.log("New profile image:")
-            setProfileImageChanged(true); // Track image change
-        }
+        const file = e.target.files?.[0];
+        if (!file) return; 
+    
+        setOldProfileImage(user?.profileImage ?? null);    
+        setNewProfileImage(file);
+        
+        const imageUrl = URL.createObjectURL(file);
+        setUser((prev) => prev ? { ...prev, profileImage: imageUrl } : null);
+        setProfileImageChanged(true); 
     };
+    
 
     const handleEditUsername = async () => {
         if (newUsername !== user?.username) {
