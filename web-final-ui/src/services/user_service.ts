@@ -24,11 +24,11 @@ const addUserPhoto = (userId: string, photo: File) => {
     return { request, abort: () => abortController.abort() };
 };
 
-const updateUserName = (userName: string) => {
+const updateUserName = (username: string) => {
     const abortController = new AbortController();
     const request = apiClient.put<User>(
         "/users/userName",
-        { userName },
+        { username },
         { signal: abortController.signal }
     );
 
