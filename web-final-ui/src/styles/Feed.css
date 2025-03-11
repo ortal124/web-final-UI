@@ -1,41 +1,40 @@
-
 html, body {
     margin: 0;
     padding: 0;
-    height: 100vh; 
-    overflow: hidden; 
+    height: 100%;
     display: flex;
     justify-content: center;
     background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
-}
-
-.feed-container {
+    overflow: hidden;
+  }
+  
+  .feed-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    flex-direction: column; 
+    overflow-y: scroll;
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-
-.post-card {
+    width: 100%;
+    max-width: 600px; /* גבול רוחב הפיד */
+    margin: 0 auto;
+    height: 100vh; /* גובה הפיד מתמלא לאורך המסך */
+  }
+  
+  .post-card {
     width: 100%;
     background: white;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* רווח בין הפוסטים */
     text-align: center;
-}
-
-
-.post-header {
+    box-sizing: border-box;
+  }
+  
+  .post-header {
     display: flex;
     justify-content: flex-start;
     padding: 5px;
@@ -46,69 +45,59 @@ html, body {
     border-radius: 5px;
     padding: 8px;
     margin-bottom: 10px;
-}
-
-
-.post-image {
+  }
+  
+  .post-image {
     width: 100%;
     height: auto;
     max-height: 250px;
-    object-fit: contain; 
+    object-fit: contain;
     border-radius: 5px;
-}
-
-
-.post-quote {
+  }
+  
+  .post-quote {
     font-size: 16px;
     font-weight: bold;
     margin: 10px 0;
     color: #333;
-}
-
-
-.post-actions {
+  }
+  
+  .post-actions {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-}
-
-
-.like-button {
+  }
+  
+  .like-button {
     background: none;
     border: none;
     font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
-    color: gray; 
-}
-
-.like-button.liked .heart-icon {
-    color: red; 
-}
-
-
-.comments-section {
+  }
+  
+  .comments-section {
     margin-top: 10px;
     text-align: left;
-}
-
-.comment {
+  }
+  
+  .comment {
     font-size: 14px;
     background: #f1f1f1;
     padding: 5px;
     border-radius: 5px;
     margin-top: 5px;
-}
-
-.comment strong {
+  }
+  
+  .comment strong {
     color: #0077cc;
-}
-
-
-.comment-input {
+  }
+  
+  .comment-input {
     width: 100%;
     padding: 8px;
     margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-}
+  }
+  
