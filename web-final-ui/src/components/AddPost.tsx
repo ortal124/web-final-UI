@@ -1,55 +1,76 @@
-import { FC, useState } from 'react';
-import "../styles/AddPost.css";
-import { useNavigate } from 'react-router-dom';
-import postService from '../services/posts_service';
-import { Post } from '../services/intefaces/post';
+import { FC, useState } from "react";
+import "../styles/AddPost.css"; // Make sure the styles match
+import { useNavigate } from "react-router-dom";
+import postService from "../services/posts_service";
+import { Sparkles } from "lucide-react"; // Icon for sparkle
+import icon from "../../fairy-icon.webp"; // Pixie icon
 
 const AddPost: FC = () => {
     const navigate = useNavigate();
-    
-    const [text, setText] = useState<string>('');
+    const [text, setText] = useState("");
     const [image, setImage] = useState<File | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const handleAddPost = async () => {
-        if (!text || !image) {
-            console.log('Please fill in both text and image fields.');
-            return;
-        }
-
-        const postData: Partial<Post> = {
-            text,
-            image
-        };
-
+    const handleCreatePost = async () => {
         try {
-            const { request } = postService.createPost(postData.image!!, postData.text!!);
+            if (!text) {
+                alert("הזן טקסט לפני הפרסום!");
+                return;
+            }
+            if (!image) {
+                alert("הזן תמונה לפני הפרסום או תבקש מפיקסי לעזור לך");
+                return;
+            }
+            const { request } = postService.createPost(image, text);
             const res = await request;
             if (res.status === 201) {
                 console.log("Post added successfully");
-                navigate('/feed');
+                navigate("/feed");
             }
         } catch (err: any) {
-            console.log("Error adding post:", err);
+            console.error("Error adding post:", err);
+        }
+    };
+
+    const handleGenerateText = async () => {
+        if (!image) {
+            alert("אנא העלה תמונה תחילה.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const { request } = postService.generateTextFromImage(image); 
+            const res = await request;
+            setText(res.data.text.quote);
+        } catch (error) {
+            console.error("Error generating text:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="add-post-container">
-            <div className="form-container">
+            <div className="add-post-form-container">
                 <h2>Add a New Post</h2>
-                <input
-                    type="text"
-                    className="input"
-                    placeholder="Enter your quote"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}  // Update the text state
-                />
                 <input
                     type="file"
                     className="input"
-                    onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}  // Update the image state
+                    onChange={(e) => setImage(e.target.files?.[0] || null)}
                 />
-                <button className="btn" onClick={handleAddPost}>Post</button>
+                <div className="text-input-container">
+                    <input
+                        type="text"
+                        className="input"
+                        placeholder="Enter your quote"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                    <div className="fairy-icon" onClick={handleGenerateText}>
+                        {loading ? <Sparkles className="loading-icon" /> : <img src={icon} alt="Pixie" />}
+                    </div>
+                </div>
+                <button className="btn" onClick={handleCreatePost}>Post</button>
             </div>
         </div>
     );

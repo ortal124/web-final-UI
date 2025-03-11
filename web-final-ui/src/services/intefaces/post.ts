@@ -4,3 +4,9 @@ export interface Post {
     userId: string;
     likes: string[];
   }
+
+export interface generatedPostText {
+    text: {
+      quote: string;
+    }
+  }
