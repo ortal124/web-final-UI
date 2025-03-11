@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "../styles/Feed.css";
 import postService from "../services/posts_service";
 import { Post } from "../services/intefaces/post";
+import userService from "../services/user_service";
+import commentsService from "../services/comments_service";
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -9,6 +11,26 @@ const Feed: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const currentUser = localStorage.getItem("userId") || "";
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const {request} = userService.getUserProfile(userId);
+      const res = await request;
+      return res.data.username;
+    } catch (error) {
+      console.error("Failed to fetch userDetails:", error);
+    }
+  };
+
+  const fetchPostComments = async (postId: string) => {
+    try {
+      const {request} = commentsService.getCommentsByPostId(postId);
+      const res = await request;
+      return res.data;
+    } catch (error) {
+      console.error("Failed to fetch userDetails:", error);
+    }
+  };
 
   const fetchPosts = async () => {
     if (!hasMore || loading) return;
@@ -18,6 +40,13 @@ const Feed: React.FC = () => {
       const { request } = postService.getPosts(page, 5);
       const response = await request;
       const { downloadedPosts, totalPages } = response.data;
+
+      for (let post of downloadedPosts) {
+        const username = await fetchUserData(post.userId);
+        post.username = username;
+        const comments = await fetchPostComments(post._id!!);
+        post.comments = comments || [];
+      }
 
       setPosts((prevPosts) => [...prevPosts, ...downloadedPosts]);
       setPage((prevPage) => prevPage + 1);
@@ -33,6 +62,7 @@ const Feed: React.FC = () => {
   const lastPostRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading) return;
+      console.log("lastPostRef");
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -86,7 +116,7 @@ const Feed: React.FC = () => {
         return(
           <div key={post._id} className="post-card" ref={isLastPost ? lastPostRef : null}>
             <div className="post-header">
-              <span className="post-user">@ortal</span>
+              <span className="post-user">@{post.username}</span>
             </div>
             <img src={post.file} alt="Post" className="post-image" />
             <p className="post-quote">"{post.text}"</p>
@@ -98,7 +128,7 @@ const Feed: React.FC = () => {
               >
                 <span className="heart-icon">{post.likes.includes(currentUser) ? "❤️" : "🤍"}</span> {post.likes.length}
               </button>
-              <span className="comment-count">0 comments</span>
+              <span className="comment-count">{post.comments?.length || 0} comments</span>
             </div>
           </div>
      )})}
