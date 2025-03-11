@@ -53,7 +53,7 @@ const updatePost = (postId: string, image: File | null, content: string | null) 
     const abortController = new AbortController();
     const formData = new FormData();
     if(image) formData.append("image", image);
-    if(content) formData.append("content", content);
+    if(content) formData.append("text", content);
 
     const request = apiClient.put<Post>(`/posts/${postId}`, formData, {
         signal: abortController.signal,

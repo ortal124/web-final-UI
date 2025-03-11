@@ -13,37 +13,33 @@ const PostDetail: React.FC = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState('');
+  const [editedImage, setEditedImage] = useState<File | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!postId || !currentUserId) return;
+    fetchPostDetails();
+  }, [postId]);
 
   const fetchPostDetails = async () => {
     try {
-      let postRequest = postService.getPostById(postId).request;
-      const postResponse =  await postRequest;
-
-      let commentRequest = commentsService.getCommentsByPostId(postId).request;
-      const commentsResponse = await commentRequest;
-
-      let userPostRequest = userService.getUserProfile(postResponse.data.userId).request;
-      const userResponse = await userPostRequest;  
+      const postResponse = await postService.getPostById(postId).request;
+      const commentsResponse = await commentsService.getCommentsByPostId(postId).request;
+      const userResponse = await userService.getUserProfile(postResponse.data.userId).request;
       
       const updatedComments = await Promise.all(commentsResponse.data.map(async (comment) => {
-        let userCommentRequest = userService.getUserProfile(comment.userId).request;
-        const userCommentResponse = await userCommentRequest;
-        comment.username = userCommentResponse.data.username;
-        return comment;
+        const userCommentResponse = await userService.getUserProfile(comment.userId).request;
+        return { ...comment, username: userCommentResponse.data.username };
       }));
-
-      setPost({...postResponse.data, username: userResponse.data.username, comments: updatedComments});
+      
+      setPost({ ...postResponse.data, username: userResponse.data.username, comments: updatedComments });
       setComments(updatedComments);
     } catch (error) {
       console.error("Failed to fetch post details:", error);
     }
   };
-
-  useEffect(() => {
-    if(!postId || !currentUserId) return;
-    fetchPostDetails();
-  }, [postId, comments]);
 
   const handleLikeToggle = async () => {
     if (!post) return;
@@ -70,49 +66,63 @@ const PostDetail: React.FC = () => {
       console.error("Failed to add comment:", error);
     }
   };
-
-  const handleEditPost = async () => {
+  const handleEditPost = () => {
     if (!post) return;
+    setEditedText(post.text);
+    setIsEditing(true);
+  };
 
-    // כאן תוכל לפתוח דיאלוג או טופס לעריכת הפוסט (טקסט/תמונה)
-    const updatedText = prompt("Edit your post:", post.text);
-    if (updatedText) {
-      await postService.updatePost(postId, null, updatedText).request;
-      setPost({ ...post, text: updatedText });
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedImage(null);
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setEditedImage(event.target.files[0]);
     }
   };
 
-  const onClose = () => {
-    navigate(-1);
+  const handleSaveEdit = async () => {
+    if (!post || (!editedImage && editedText === post.text)) return;    
+    await postService.updatePost(postId, editedImage, editedText).request;
+    fetchPostDetails();
+    setIsEditing(false);
   };
 
   const handleDeletePost = async () => {
     if (!post || post.userId !== currentUserId) return;
-
     await postService.deletePost(postId);
-    onClose();
+    navigate(-1);
   };
 
   if (!post) return <div>Loading...</div>;
 
   return (
     <div className="post-detail-container">
-      <button onClick={onClose}>Close</button>
-
+      <button onClick={() => navigate(-1)}>Close</button>
       <div className="post-header">
         <span className="post-user">@{post.username}</span>
       </div>
 
-      <img src={post.file} alt="Post" className="post-image" />
-      <p className="post-quote">"{post.text}"</p>
+      {isEditing ? (
+        <div>
+          <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-image" />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <textarea value={editedText} onChange={(e) => setEditedText(e.target.value)} />
+          <button onClick={handleSaveEdit}>Save</button>
+          <button onClick={handleCancelEdit}>Cancel</button>
+        </div>
+      ) : (
+        <div>
+          <img src={post.file} alt="Post" className="post-image" />
+          <p className="post-quote">"{post.text}"</p>
+        </div>
+      )}
 
-      <PostActions
-              post={post}
-              currentUserId={currentUserId}
-              onLikeToggle={() => handleLikeToggle()}
-       />
+      <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} />
 
-      {post.userId === currentUserId && (
+      {post.userId === currentUserId && !isEditing && (
         <div className="post-edit-actions">
           <button onClick={handleEditPost}>Edit</button>
           <button onClick={handleDeletePost}>Delete</button>
@@ -121,10 +131,10 @@ const PostDetail: React.FC = () => {
 
       <div className="comments-section">
         <div className="comments-list">
-          {comments.map((comment: Comment) => (
+          {comments.map((comment) => (
             <div key={comment._id} className="comment">
               <span className="comment-user">@{comment.username}</span>
-              <p>{comment.username}</p>
+              <p>{comment.text}</p>
             </div>
           ))}
         </div>
@@ -136,7 +146,7 @@ const PostDetail: React.FC = () => {
             placeholder="Add a comment..."
           />
           <button onClick={handleCommentSubmit}>Post Comment</button>
-        </div>
+          </div>
       </div>
     </div>
   );
