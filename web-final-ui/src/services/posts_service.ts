@@ -1,5 +1,5 @@
 import apiClient from "./api-client";
-import { Post } from "./intefaces/post";
+import { generatedPostText, Post } from "./intefaces/post";
 
 const getPostById = (postId: string) => {
     const abortController = new AbortController();
@@ -25,7 +25,17 @@ const getPostsByUserId = (userId: string) => {
     return { request, abort: () => abortController.abort() };
 };
 
-// קריאה להוספת פוסט
+const generateTextFromImage = (image: File) => {
+    const abortController = new AbortController();
+    const formData = new FormData();
+    formData.append("image", image);
+    const request = apiClient.post<generatedPostText>(`/posts/generate`, formData,{
+        signal: abortController.signal,
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+    return { request, abort: () => abortController.abort() };
+};
+
 const createPost = (image: File, content: string) => {
     const abortController = new AbortController();
     const formData = new FormData();
@@ -85,4 +95,5 @@ export default {
     deletePost,
     likePost,
     unLikePost,
+    generateTextFromImage
 };
