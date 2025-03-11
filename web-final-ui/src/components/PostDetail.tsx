@@ -4,7 +4,7 @@ import commentsService from '../services/comments_service';
 import userService from '../services/user_service';
 import { Post } from '../services/intefaces/post';
 import { Comment } from '../services/intefaces/comment';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PostActions from './PostActions';
 
 const PostDetail: React.FC = () => {
@@ -13,6 +13,7 @@ const PostDetail: React.FC = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const navigate = useNavigate();
 
   const fetchPostDetails = async () => {
     try {
@@ -82,7 +83,7 @@ const PostDetail: React.FC = () => {
   };
 
   const onClose = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   const handleDeletePost = async () => {

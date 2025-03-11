@@ -44,7 +44,7 @@ const UserProfile: FC = () => {
         };
 
         Promise.all([fetchUserProfile(), fetchUserPosts()]).finally(() => setLoading(false));
-    }, [id]);
+    }, [id, location, posts]);
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewUsername(e.target.value);
