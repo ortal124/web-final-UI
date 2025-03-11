@@ -24,6 +24,7 @@ const UserProfile: FC = () => {
                 const { request } = userService.getUserProfile(id);
                 const res = await request;
                 setUser({ username: res.data.username, email: res.data.email, profileImage: res.data.file });
+                setNewUsername(res.data.username);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
             }
