@@ -62,6 +62,7 @@ const PostDetail: React.FC = () => {
       const response = await commentsService.addComment(postId, newComment).request;
       setComments([...comments, response.data]);
       setNewComment('');
+      fetchPostDetails();
     } catch (error) {
       console.error("Failed to add comment:", error);
     }
