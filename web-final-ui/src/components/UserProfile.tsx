@@ -1,40 +1,174 @@
-import { FC } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import "../styles/UserProfile.css";
+import userService from "../services/user_service";
+import postService from "../services/posts_service";
+import { Post } from "../services/intefaces/post";
 
 const UserProfile: FC = () => {
-    // נתוני משתמש לדוגמה
-    const user = {
-        username: "your_username",
-        email: "your_email@example.com",
-        profilePic: "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg", // תמונת פרופיל דיפולטיבית
-        posts: [
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/5/58/Agam_Rudberg.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShwIjkuVHQmfZc5-JIYTEe_Sqkur-4Xu3WAw&s",
-        ],
+    const id = localStorage.getItem("userId");
+    const [user, setUser] = useState<{ username: string; email: string; profileImage?: string | null } | null>(null);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [isEditingUsername, setIsEditingUsername] = useState(false);
+    const [newUsername, setNewUsername] = useState(user?.username || "");
+    const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+    const [oldProfileImage, setOldProfileImage] = useState<String | null>(null);
+    const [editProfileImageError, setEditProfileImageError] = useState<string | null>(null); // Error message
+    const [profileImageChanged, setProfileImageChanged] = useState(false); // To track profile image changes
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (!id) return;
+            try {
+                const { request } = userService.getUserProfile(id);
+                const res = await request;
+                setUser({ username: res.data.username, email: res.data.email, profileImage: res.data.file });
+                setNewUsername(res.data.username);
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
+
+        const fetchUserPosts = async () => {
+            if (!id) return;
+            try {
+                const { request } = postService.getPostsByUserId(id);
+                const res = await request;
+                setPosts(res.data);
+            } catch (error) {
+                console.error("Error fetching user posts:", error);
+            }
+        };
+
+        Promise.all([fetchUserProfile(), fetchUserPosts()]).finally(() => setLoading(false));
+    }, [id]);
+
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewUsername(e.target.value);
     };
+
+    const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setOldProfileImage(user?.profileImage ?? null);
+            console.log("Old profile image:")
+            setNewProfileImage(e.target.files[0]);
+            setUser((prev) => prev ? { ...prev, profileImage: URL.createObjectURL(e.target.files[0]) } : null); // show new image
+            console.log("New profile image:")
+            setProfileImageChanged(true); // Track image change
+        }
+    };
+
+    const handleEditUsername = async () => {
+        if (newUsername !== user?.username) {
+            try {
+                await userService.updateUserName(newUsername);
+                setUser((prev) => prev ? { ...prev, username: newUsername } : null);
+            } catch (error) {
+                console.error("Error updating username:", error);
+            }
+        }
+        setIsEditingUsername(false);
+    };
+
+    const cancelEditUsername = () => {
+        setIsEditingUsername(false);
+        setNewUsername(user?.username || "");
+    }
+
+    const handleEditProfileImage = async () => {
+        if (newProfileImage) {
+            try {
+                await userService.addUserPhoto(id!!, newProfileImage);
+                setUser((prev) => prev ? { ...prev, profileImage: URL.createObjectURL(newProfileImage) } : null);
+                setProfileImageChanged(false); // Reset after success
+            } catch (error) {
+                console.error("Error updating profile image:", error);
+                setEditProfileImageError("Failed to update profile picture. Please try again.");
+            }
+        }
+    };
+
+    const handleCancelProfileImageChange = () => {
+        // Reset
+        setProfileImageChanged(false);
+        setUser((prev) => prev ? { ...prev, profileImage: oldProfileImage as string | undefined } : user);
+        setNewProfileImage(null);
+        setOldProfileImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
+    if (loading) return <p>Loading...</p>;
+    if (!user) return <p>User not found</p>;
 
     return (
         <div className="profile-container">
             <div className="profile-header">
-                <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                <div className="profile-pic-container">
+                    <img
+                        src={user.profileImage || "default-profile-pic-url"}
+                        alt="Profile"
+                        className="profile-pic"
+                    />
+                    <button className="edit-button" onClick={() => document.getElementById("profile-image-input")?.click()}>
+                        ✏️
+                    </button>
+                    <input
+                        type="file"
+                        id="profile-image-input"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleProfileImageChange}
+                    />
+                    {profileImageChanged && (
+                        <div className="profile-image-actions">
+                            <button onClick={handleEditProfileImage} className="save-button">
+                                Save
+                            </button>
+                            <button onClick={handleCancelProfileImageChange} className="cancel-button">
+                                Cancel
+                            </button>
+                        </div>
+                    )}
+                </div>
                 <div className="profile-info">
-                    <h2 className="profile-username">{user.username}</h2>
+                    {isEditingUsername ? (
+                        <div>
+                            <input
+                                type="text"
+                                value={newUsername}
+                                onChange={handleUsernameChange}
+                                className="username-input"
+                            />
+                            <button onClick={handleEditUsername} className="save-username-button">
+                                Save
+                            </button>
+                            <button onClick={cancelEditUsername} className="cancel-username-button">
+                                cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <h2 className="profile-username">
+                            {user.username || user.username}
+                            <button className="edit-button" onClick={() => setIsEditingUsername(true)}>
+                                ✏️
+                            </button>
+                        </h2>
+                    )}
                     <p className="profile-email">{user.email}</p>
+                    {editProfileImageError && <p className="error-message">{editProfileImageError}</p>}
                 </div>
             </div>
             <div className="posts-grid">
-                {user.posts.map((post, index) => (
-                    <img key={index} src={post} alt="Post" className="post-item" />
-                ))}
+                {posts.length > 0 ? (
+                    posts.map((post, index) => (
+                        <img key={index} src={post.file} alt="Post" className="post-item" />
+                    ))
+                ) : (
+                    <p>No posts yet</p>
+                )}
             </div>
         </div>
     );
