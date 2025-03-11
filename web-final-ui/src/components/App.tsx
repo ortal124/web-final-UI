@@ -8,6 +8,7 @@ import UserFeed from './UserFeed';
 import UserProfile from './UserProfile';
 import Sidebar from "./SideBar";
 import AddPost from './AddPost';
+import PostDetailPage from './PostDetail';
 
 import "../styles/App.css";
 import ProtectedRoute from "./auth-utils/ProtectedRoute";
@@ -57,6 +58,16 @@ const App: React.FC = () => {
                     </div>
                   }
                 />
+                <Route 
+                  path="/post/:postId" 
+                  element={
+                    <div className="main-layout">
+                      <Sidebar />
+                      <div className="content">
+                        <PostDetailPage/>
+                      </div>
+                    </div>
+                  }/>
             </Route>
             <Route path="*" element={<LogInForm />} />
             </Routes>
