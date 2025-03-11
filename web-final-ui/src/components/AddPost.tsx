@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
-import "../styles/AddPost.css"; // Make sure the styles match
+import "../styles/AddPost.css";
 import { useNavigate } from "react-router-dom";
 import postService from "../services/posts_service";
-import { Sparkles } from "lucide-react"; // Icon for sparkle
-import icon from "../../fairy-icon.webp"; // Pixie icon
+import { Sparkles } from "lucide-react";
+import icon from "../../fairy-icon.webp";
 
 const AddPost: FC = () => {
     const navigate = useNavigate();

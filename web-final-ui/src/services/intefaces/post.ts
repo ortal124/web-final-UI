@@ -3,6 +3,7 @@ export interface Post {
     image: File;
     userId: string;
     likes: string[];
+    file?: string;
   }
 
 export interface generatedPostText {
