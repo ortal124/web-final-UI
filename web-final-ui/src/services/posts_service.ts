@@ -1,5 +1,5 @@
 import apiClient from "./api-client";
-import { generatedPostText, Post } from "./intefaces/post";
+import { generatedPostText, getPostsResponse, Post } from "./intefaces/post";
 
 const getPostById = (postId: string) => {
     const abortController = new AbortController();
@@ -9,9 +9,9 @@ const getPostById = (postId: string) => {
     return { request, abort: () => abortController.abort() };
 };
 
-const getPosts = () => {
+const getPosts = (page: number, limit:number) => {
     const abortController = new AbortController();
-    const request = apiClient.get<Post[]>("/posts", {
+    const request = apiClient.get<getPostsResponse>(`/posts?page=${page}&limit=${limit}`, {
         signal: abortController.signal,
     });
     return { request, abort: () => abortController.abort() };
