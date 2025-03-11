@@ -4,6 +4,7 @@ import commentsService from '../services/comments_service';
 import { Post } from '../services/intefaces/post';
 import { Comment } from '../services/intefaces/comment';
 import { useParams } from 'react-router-dom';
+import PostActions from './PostActions';
 
 const PostDetail: React.FC = () => {
   const postId = useParams<{ postId: string }>().postId || "";
@@ -92,15 +93,11 @@ const PostDetail: React.FC = () => {
       <img src={post.file} alt="Post" className="post-image" />
       <p className="post-quote">"{post.text}"</p>
 
-      <div className="post-actions">
-        <button
-          onClick={handleLikeToggle}
-          className={`like-button ${post.likes.includes(currentUserId) ? "liked" : ""}`}
-        >
-          <span className="heart-icon">{post.likes.includes(currentUserId) ? "❤️" : "🤍"}</span> {post.likes.length}
-        </button>
-        <span className="comment-count">{comments.length} comments</span>
-      </div>
+      <PostActions
+              post={post}
+              currentUserId={currentUserId}
+              onLikeToggle={() => handleLikeToggle()}
+       />
 
       {post.userId === currentUserId && (
         <div className="post-edit-actions">

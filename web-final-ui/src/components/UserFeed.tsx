@@ -4,6 +4,8 @@ import postService from "../services/posts_service";
 import { Post } from "../services/intefaces/post";
 import userService from "../services/user_service";
 import commentsService from "../services/comments_service";
+import { useNavigate } from "react-router-dom";
+import PostActions from "./PostActions";
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -11,6 +13,7 @@ const Feed: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const currentUser = localStorage.getItem("userId") || "";
+  const navigate = useNavigate();
 
   const fetchUserData = async (userId: string) => {
     try {
@@ -108,27 +111,29 @@ const Feed: React.FC = () => {
     }
   };
 
+  const handlePostClick = (postId: string) => {
+    navigate(`/post/${postId}`);
+  };
+
   return (
     <div className="feed-container">
       {posts.map((post, index) => {
         const isLastPost = index === posts.length - 1;
         return(
-          <div key={post._id} className="post-card" ref={isLastPost ? lastPostRef : null}>
+          <div key={post._id}
+               className="post-card"
+               ref={isLastPost ? lastPostRef : null}>
             <div className="post-header">
               <span className="post-user">@{post.username}</span>
             </div>
-            <img src={post.file} alt="Post" className="post-image" />
+            <img src={post.file} alt="Post" className="post-image" onClick={() => handlePostClick(post._id!!)}/>
             <p className="post-quote">"{post.text}"</p>
 
-            <div className="post-actions">
-              <button
-                onClick={() => toggleLike(post._id!!)}
-                className={`like-button ${post.likes.includes(currentUser) ? "liked" : ""}`}
-              >
-                <span className="heart-icon">{post.likes.includes(currentUser) ? "❤️" : "🤍"}</span> {post.likes.length}
-              </button>
-              <span className="comment-count">{post.comments?.length || 0} comments</span>
-            </div>
+            <PostActions
+              post={post}
+              currentUserId={currentUser}
+              onLikeToggle={() => post._id && toggleLike(post._id)}
+            />
           </div>
      )})}
       {loading && <p>טוען עוד פוסטים...</p>}
