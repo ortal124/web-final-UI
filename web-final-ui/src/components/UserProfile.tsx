@@ -70,6 +70,11 @@ const UserProfile: FC = () => {
         setIsEditingUsername(false);
     };
 
+    const cancelEditUsername = () => {
+        setIsEditingUsername(false);
+        setNewUsername(user?.username || "");
+    }
+
     const handleEditProfileImage = async () => {
         if (newProfileImage) {
             try {
@@ -139,10 +144,13 @@ const UserProfile: FC = () => {
                             <button onClick={handleEditUsername} className="save-username-button">
                                 Save
                             </button>
+                            <button onClick={cancelEditUsername} className="cancel-username-button">
+                                cancel
+                            </button>
                         </div>
                     ) : (
                         <h2 className="profile-username">
-                            {user.username}{" "}
+                            {user.username || user.username}
                             <button className="edit-button" onClick={() => setIsEditingUsername(true)}>
                                 ✏️
                             </button>
