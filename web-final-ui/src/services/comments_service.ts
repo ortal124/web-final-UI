@@ -13,7 +13,7 @@ const getCommentsByPostId = (postId: string) => {
 // Function to add a new comment
 const addComment = (postId: string, content: string) => {
     const abortController = new AbortController();
-    const request = apiClient.post("/comments", { postId, content }, {
+    const request = apiClient.post("/comments", {post:postId, text:content }, {
         signal: abortController.signal,
     });
     return { request, abort: () => abortController.abort() };
