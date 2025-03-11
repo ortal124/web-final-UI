@@ -43,7 +43,7 @@ const PostDetail: React.FC = () => {
   useEffect(() => {
     if(!postId || !currentUserId) return;
     fetchPostDetails();
-  }, [postId]);
+  }, [postId, comments]);
 
   const handleLikeToggle = async () => {
     if (!post) return;
