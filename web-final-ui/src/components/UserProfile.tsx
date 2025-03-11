@@ -6,7 +6,7 @@ import { Post } from "../services/intefaces/post";
 
 const UserProfile: FC = () => {
     const id = localStorage.getItem("userId");
-    const [user, setUser] = useState<{ username: string; email: string; profileImage?: string } | null>(null);
+    const [user, setUser] = useState<{ username: string; email: string; profileImage?: string | null } | null>(null);
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -50,7 +50,7 @@ const UserProfile: FC = () => {
 
     const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setOldProfileImage(user.profileImage);
+            setOldProfileImage(user?.profileImage ?? null);
             console.log("Old profile image:")
             setNewProfileImage(e.target.files[0]);
             setUser((prev) => prev ? { ...prev, profileImage: URL.createObjectURL(e.target.files[0]) } : null); // show new image
@@ -92,7 +92,7 @@ const UserProfile: FC = () => {
     const handleCancelProfileImageChange = () => {
         // Reset
         setProfileImageChanged(false);
-        setUser((prev) => prev ? { ...prev, profileImage: oldProfileImage } : null); // show new image
+        setUser((prev) => prev ? { ...prev, profileImage: oldProfileImage as string | undefined } : user);
         setNewProfileImage(null);
         setOldProfileImage(null);
         if (fileInputRef.current) {
