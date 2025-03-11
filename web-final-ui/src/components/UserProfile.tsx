@@ -3,6 +3,7 @@ import "../styles/UserProfile.css";
 import userService from "../services/user_service";
 import postService from "../services/posts_service";
 import { Post } from "../services/intefaces/post";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile: FC = () => {
     const id = localStorage.getItem("userId");
@@ -16,6 +17,7 @@ const UserProfile: FC = () => {
     const [editProfileImageError, setEditProfileImageError] = useState<string | null>(null);
     const [profileImageChanged, setProfileImageChanged] = useState(false); 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -42,7 +44,7 @@ const UserProfile: FC = () => {
         };
 
         Promise.all([fetchUserProfile(), fetchUserPosts()]).finally(() => setLoading(false));
-    }, [id]);
+    }, [id, location]);
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewUsername(e.target.value);
@@ -60,6 +62,9 @@ const UserProfile: FC = () => {
         setProfileImageChanged(true); 
     };
     
+    const handlePostClick = (postId: string) => {
+        navigate(`/post/${postId}`);
+    };
 
     const handleEditUsername = async () => {
         if (newUsername !== user?.username) {
@@ -166,7 +171,7 @@ const UserProfile: FC = () => {
             <div className="posts-grid">
                 {posts.length > 0 ? (
                     posts.map((post, index) => (
-                        <img key={index} src={post.file} alt="Post" className="post-item" />
+                        <img key={index} src={post.file} alt="Post" className="post-item" onClick={() => handlePostClick(post._id!!)}/>
                     ))
                 ) : (
                     <p>No posts yet</p>
