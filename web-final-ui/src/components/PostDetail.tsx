@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import postService from '../services/posts_service';
 import commentsService from '../services/comments_service';
+import userService from '../services/user_service';
 import { Post } from '../services/intefaces/post';
 import { Comment } from '../services/intefaces/comment';
 import { useParams } from 'react-router-dom';
@@ -17,11 +18,22 @@ const PostDetail: React.FC = () => {
     try {
       let postRequest = postService.getPostById(postId).request;
       const postResponse =  await postRequest;
+
       let commentRequest = commentsService.getCommentsByPostId(postId).request;
       const commentsResponse = await commentRequest;
 
-      setPost(postResponse.data);
-      setComments(commentsResponse.data);
+      let userPostRequest = userService.getUserProfile(postResponse.data.userId).request;
+      const userResponse = await userPostRequest;  
+      
+      const updatedComments = await Promise.all(commentsResponse.data.map(async (comment) => {
+        let userCommentRequest = userService.getUserProfile(comment.userId).request;
+        const userCommentResponse = await userCommentRequest;
+        comment.username = userCommentResponse.data.username;
+        return comment;
+      }));
+
+      setPost({...postResponse.data, username: userResponse.data.username, comments: updatedComments});
+      setComments(updatedComments);
     } catch (error) {
       console.error("Failed to fetch post details:", error);
     }
@@ -108,10 +120,10 @@ const PostDetail: React.FC = () => {
 
       <div className="comments-section">
         <div className="comments-list">
-          {comments.map((comment: any) => (
+          {comments.map((comment: Comment) => (
             <div key={comment._id} className="comment">
               <span className="comment-user">@{comment.username}</span>
-              <p>{comment.text}</p>
+              <p>{comment.username}</p>
             </div>
           ))}
         </div>
