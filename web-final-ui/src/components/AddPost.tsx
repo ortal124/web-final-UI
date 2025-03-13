@@ -3,7 +3,7 @@ import "../styles/AddPost.css";
 import { useNavigate } from "react-router-dom";
 import postService from "../services/posts_service";
 import { Sparkles } from "lucide-react";
-import icon from "../../fairy-icon.webp";
+import icon from "../icons/fairy-icon.webp";
 
 const AddPost: FC = () => {
     const navigate = useNavigate();

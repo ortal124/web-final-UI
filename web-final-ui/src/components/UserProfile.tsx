@@ -4,6 +4,7 @@ import userService from "../services/user_service";
 import postService from "../services/posts_service";
 import { Post } from "../services/intefaces/post";
 import { useNavigate } from "react-router-dom";
+import defaultProfilePic from "../icons/defaule-profile.avif";
 
 const UserProfile: FC = () => {
     const id = localStorage.getItem("userId");
@@ -115,7 +116,7 @@ const UserProfile: FC = () => {
             <div className="profile-header">
                 <div className="profile-pic-container">
                     <img
-                        src={user.profileImage || "default-profile-pic-url"}
+                        src={user.profileImage || defaultProfilePic}
                         alt="Profile"
                         className="profile-pic"
                     />

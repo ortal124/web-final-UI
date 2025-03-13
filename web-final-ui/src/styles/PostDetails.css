@@ -51,12 +51,20 @@
   }
   
   .comments-section {
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    max-height: 200px; /* גובה קבוע למנוע יציאה מהמסך */
+    overflow: hidden;
   }
   
   .comments-list {
-    max-height: 200px;
-    overflow-y: auto;
+    flex-grow: 1;
+    max-height: 100px; /* הגבלת הגובה של הרשימה */
+    overflow-y: auto; /* הפעלת גלילה אנכית */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
   }
   
   .add-comment textarea {
