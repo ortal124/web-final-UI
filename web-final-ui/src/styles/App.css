@@ -12,4 +12,8 @@
     flex-grow: 1;
     padding: 20px;
   }
+
+  body{
+    background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
+  }
   

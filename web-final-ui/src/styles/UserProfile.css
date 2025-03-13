@@ -6,7 +6,6 @@ html, body {
     overflow: hidden; 
     display: flex;
     justify-content: center;
-    background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
 }
 
 .profile-container {
