@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./auth-utils/AuthContext";
 import "../styles/Sidebar.css"; 
+import icon from "../icons/fairy-icon.webp";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +15,14 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="sidebar">
-      <h2 className="logo">PixiePost</h2>
+      <div className="sidebar-header">
+        <img
+          src={icon}
+          alt="icon"
+          className="app-icon"
+        />
+        <h2 className="logo">PixiePost</h2>
+      </div>
 
       <nav className="nav-links">
         <Link to="/feed" className="nav-item">

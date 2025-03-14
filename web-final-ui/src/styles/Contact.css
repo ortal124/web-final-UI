@@ -1,5 +1,6 @@
 .user-sidebar {
     position: fixed;
+    margin: 1%;
     top: 20px;
     right: 20px;
     width: 250px;
