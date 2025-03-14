@@ -8,7 +8,6 @@
   }
   
   .content {
-    margin-left: 250px; 
     flex-grow: 1;
     padding: 20px;
   }
