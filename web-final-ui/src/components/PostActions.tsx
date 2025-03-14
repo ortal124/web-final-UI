@@ -1,5 +1,6 @@
 import React from 'react';
 import { Post } from '../services/intefaces/post';
+import "../styles/PostActions.css";
 
 interface PostActionsProps {
   post: Post;
@@ -16,12 +17,12 @@ const PostActions: React.FC<PostActionsProps> = ({
     <div className="post-actions">
       <button
         onClick={onLikeToggle}
-        className={`like-button ${post.likes.includes(currentUserId) ? "liked" : ""}`}
+        className={`like-button`}
       >
         <span className="heart-icon">{post.likes.includes(currentUserId) ? "❤️" : "🤍"}</span> {post.likes.length}
       </button>
       <span className="comment-count">
-        {post.comments?.length || 0} comments
+        comments ({post.comments?.length || 0})
       </span>
     </div>
   );

@@ -1,0 +1,14 @@
+.like-button {
+    background: none;
+    border: none;
+    justify-content: flex-start;
+    align-items:start;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: 5%;
+  }
+
+  .comment-count {
+    margin-left: 5%;
+  }
