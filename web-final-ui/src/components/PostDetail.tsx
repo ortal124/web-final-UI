@@ -165,9 +165,9 @@ const PostDetail: React.FC = () => {
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="הוסיפי תגובה..."
+            placeholder="add comment..."
           />
-          <button className="edit-action-button" onClick={handleCommentSubmit}>פרסמי תגובה</button>
+          <button className="edit-action-button" onClick={handleCommentSubmit}>post comment</button>
         </div>
       </div>
     </div>

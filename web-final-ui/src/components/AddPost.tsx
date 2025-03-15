@@ -88,7 +88,12 @@ const AddPost: FC = () => {
                         {loading ? <Sparkles className="loading-icon" /> : <img src={icon} alt="Pixie" />}
                     </div>
                 </div>
-                <button className="btn" onClick={handleCreatePost}>Post</button>
+                <button 
+                    className="btn"
+                    onClick={handleCreatePost}
+                    disabled={!text || !image}>
+                        Post
+                    </button>
             </div>
         </div>
     );

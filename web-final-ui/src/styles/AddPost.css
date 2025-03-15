@@ -87,8 +87,3 @@ add-post-form-container.h2 {
     margin-top: 10px;
     transition: background-color 0.2s ease-in-out;
 }
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
