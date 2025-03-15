@@ -4,23 +4,31 @@ import { useNavigate } from "react-router-dom";
 import postService from "../services/posts_service";
 import { Sparkles } from "lucide-react";
 import icon from "../icons/fairy-icon.webp";
+import default_preview from "../icons/default_add_image.jpeg";
+
 
 const AddPost: FC = () => {
     const navigate = useNavigate();
     const [text, setText] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
+    const [preview, setPreview] = useState<string>(default_preview);
 
     const handleCreatePost = async () => {
         try {
-            if (!text) {
-                alert("הזן טקסט לפני הפרסום!");
+            if(!text && !image) {
+                alert("הזן תמונה וטקסט לפני הפרסום!");
                 return;
-            }
+            }  
             if (!image) {
-                alert("הזן תמונה לפני הפרסום או תבקש מפיקסי לעזור לך");
+                alert("הזן תמונה לפני הפרסום");
                 return;
             }
+            if (!text) {
+                alert("הזן טקסט לפני הפרסום! או תבקש מפיקסי לעזור לך");
+                return;
+            }
+
             const { request } = postService.createPost(image, text);
             const res = await request;
             if (res.status === 201) {
@@ -49,15 +57,25 @@ const AddPost: FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setImage(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => setPreview(reader.result as string);
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <div className="add-post-container">
             <div className="add-post-form-container">
-                <h2>Add a New Post</h2>
+                <h2>✨ Add a New Post ✨</h2>   
                 <input
-                    type="file"
-                    className="input"
-                    onChange={(e) => setImage(e.target.files?.[0] || null)}
-                />
+                    type="file" 
+                    className="input" 
+                    onChange={handleImageChange} />
+                <img src={preview} alt="Preview" className="preview-img" />
                 <div className="text-input-container">
                     <input
                         type="text"
