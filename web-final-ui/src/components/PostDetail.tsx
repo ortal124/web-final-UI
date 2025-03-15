@@ -116,23 +116,38 @@ const PostDetail: React.FC = () => {
         <div className="post-header">
           <span className="post-user">@{post.username}</span>
         </div>
-  
         {isEditing ? (
-          <div>
-            <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-details-image" />
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-            <textarea value={editedText} onChange={(e) => setEditedText(e.target.value)} />
-            <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
-            <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
+          <div className="post-content">
+            <img
+              src={editedImage ? URL.createObjectURL(editedImage) : post.file}
+              alt="Post"
+              className="post-image expanded"
+            />
+            <div className="edit-mode">
+              <textarea
+                value={editedText}
+                onChange={(e) => setEditedText(e.target.value)}
+                className="edit-textarea"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="edit-image-input"
+              />
+              <div className="edit-actions">
+                <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
+                <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
+              </div>
+            </div>
           </div>
         ) : (
-          <div>
+          <div className="post-content">
             <img src={post.file} alt="Post" className="post-image expanded" />
             <p className="post-quote">"{post.text}"</p>
+            <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} showComments={false} />
           </div>
         )}
-  
-        <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} showComments={false} />
       </div>
   
       <div className="comments-section">

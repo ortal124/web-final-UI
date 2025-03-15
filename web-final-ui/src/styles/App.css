@@ -25,6 +25,7 @@
     transition: 0.3s;
     border: none;
     font-size: 14px;
+    margin-top: 2%;
   }
   
   .edit-action-button:hover {
