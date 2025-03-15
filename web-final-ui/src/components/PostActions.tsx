@@ -6,12 +6,14 @@ interface PostActionsProps {
   post: Post;
   currentUserId: string;
   onLikeToggle: () => void;
+  showComments?: boolean 
 }
 
 const PostActions: React.FC<PostActionsProps> = ({
   post,
   currentUserId,
-  onLikeToggle
+  onLikeToggle,
+  showComments = true
 }) => {
   return (
     <div className="post-actions">
@@ -21,9 +23,11 @@ const PostActions: React.FC<PostActionsProps> = ({
       >
         <span className="heart-icon">{post.likes.includes(currentUserId) ? "❤️" : "🤍"}</span> {post.likes.length}
       </button>
-      <span className="comment-count">
-        comments ({post.comments?.length || 0})
-      </span>
+      { showComments &&
+        <span className="comment-count">
+          comments ({post.comments?.length || 0})
+        </span>
+      }
     </div>
   );
 };

@@ -102,33 +102,41 @@ const PostDetail: React.FC = () => {
 
   return (
     <div className="post-detail-container">
-       <div className="post-edit-actions">
-        <button className="close-post-button" onClick={() => navigate(-1)}>X</button>
-        {post.userId === currentUserId && !isEditing && <button className="edit-action-button" onClick={handleEditPost}>Edit</button>}
-        {post.userId === currentUserId && !isEditing && <button className="edit-action-button" onClick={handleDeletePost}>Delete</button>}
-       </div>
-      <div className="post-header">
-        <span className="post-user">@{post.username}</span>
+      <div className="post-content">
+        <div className="post-edit-actions">
+          <button onClick={() => navigate(-1)}>X</button>
+          {post.userId === currentUserId && !isEditing && (
+            <>
+              <button className="edit-action-button" onClick={handleEditPost}>Edit</button>
+              <button className="edit-action-button" onClick={handleDeletePost}>Delete</button>
+            </>
+          )}
+        </div>
+  
+        <div className="post-header">
+          <span className="post-user">@{post.username}</span>
+        </div>
+  
+        {isEditing ? (
+          <div>
+            <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-details-image" />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <textarea value={editedText} onChange={(e) => setEditedText(e.target.value)} />
+            <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
+            <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
+          </div>
+        ) : (
+          <div>
+            <img src={post.file} alt="Post" className="post-image expanded" />
+            <p className="post-quote">"{post.text}"</p>
+          </div>
+        )}
+  
+        <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} showComments={false} />
       </div>
-
-      {isEditing ? (
-        <div>
-          <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-details-image" />
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          <textarea value={editedText} onChange={(e) => setEditedText(e.target.value)} />
-          <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
-          <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
-        </div>
-      ) : (
-        <div>
-          <img src={post.file} alt="Post" className="post-image" />
-          <p className="post-quote">"{post.text}"</p>
-        </div>
-      )}
-
-      <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} />
-      
+  
       <div className="comments-section">
+        <h3>Comments</h3>
         <div className="comments-list">
           {comments.map((comment) => (
             <div key={comment._id} className="comment">
@@ -137,18 +145,19 @@ const PostDetail: React.FC = () => {
             </div>
           ))}
         </div>
-
+  
         <div className="add-comment">
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
+            placeholder="הוסיפי תגובה..."
           />
-          <button className="edit-action-button" onClick={handleCommentSubmit}>Post Comment</button>
-          </div>
+          <button className="edit-action-button" onClick={handleCommentSubmit}>פרסמי תגובה</button>
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default PostDetail;
