@@ -120,9 +120,6 @@ const UserProfile: FC = () => {
                         alt="Profile"
                         className="profile-pic"
                     />
-                    <button className="edit-button" onClick={() => document.getElementById("profile-image-input")?.click()}>
-                        ✏️
-                    </button>
                     <input
                         type="file"
                         id="profile-image-input"
@@ -130,16 +127,20 @@ const UserProfile: FC = () => {
                         style={{ display: "none" }}
                         onChange={handleProfileImageChange}
                     />
-                    {profileImageChanged && (
+                    {profileImageChanged ? (
                         <div className="profile-image-actions">
-                            <button onClick={handleEditProfileImage} className="save-button">
+                            <button onClick={handleEditProfileImage} className="edit-action-button">
                                 Save
                             </button>
-                            <button onClick={handleCancelProfileImageChange} className="cancel-button">
+                            <button onClick={handleCancelProfileImageChange} className="edit-action-button">
                                 Cancel
                             </button>
                         </div>
-                    )}
+                    ):
+                    <button className="edit-button" onClick={() => document.getElementById("profile-image-input")?.click()}>
+                    ✏️
+                    </button>
+                    }
                 </div>
                 <div className="profile-info">
                     {isEditingUsername ? (
@@ -150,10 +151,10 @@ const UserProfile: FC = () => {
                                 onChange={handleUsernameChange}
                                 className="username-input"
                             />
-                            <button onClick={handleEditUsername} className="save-username-button">
+                            <button onClick={handleEditUsername} className="edit-action-button">
                                 Save
                             </button>
-                            <button onClick={cancelEditUsername} className="cancel-username-button">
+                            <button onClick={cancelEditUsername} className="edit-action-button">
                                 cancel
                             </button>
                         </div>
