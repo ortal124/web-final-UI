@@ -136,7 +136,12 @@ const PostDetail: React.FC = () => {
                 className="edit-image-input"
               />
               <div className="edit-actions">
-                <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
+                <button 
+                  className="edit-action-button" 
+                  onClick={handleSaveEdit}
+                  disabled={(editedText == post.text && !editedImage) || !editedText}>
+                    Save
+                </button>
                 <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
               </div>
             </div>
@@ -167,7 +172,10 @@ const PostDetail: React.FC = () => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="add comment..."
           />
-          <button className="edit-action-button" onClick={handleCommentSubmit}>post comment</button>
+          <button 
+            className="edit-action-button" 
+            onClick={handleCommentSubmit}
+            disabled={!newComment}>post comment</button>
         </div>
       </div>
     </div>

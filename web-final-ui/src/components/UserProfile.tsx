@@ -151,7 +151,10 @@ const UserProfile: FC = () => {
                                 onChange={handleUsernameChange}
                                 className="username-input"
                             />
-                            <button onClick={handleEditUsername} className="edit-action-button">
+                            <button 
+                                onClick={handleEditUsername}
+                                className="edit-action-button"
+                                disabled={!newUsername || newUsername === user.username}>
                                 Save
                             </button>
                             <button onClick={cancelEditUsername} className="edit-action-button">
