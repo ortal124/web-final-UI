@@ -1,88 +1,117 @@
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+}
+
 .post-detail-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .post-header {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .post-image {
-    width: 100%;
-    max-height: 500px;
-    object-fit: cover;
-    margin-bottom: 10px;
-  }
-  
-  .post-quote {
-    font-size: 16px;
-    font-style: italic;
-  }
-  
-  .post-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-  }
-  
-  .like-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .heart-icon {
-    font-size: 20px;
-  }
-  
-  .comment-count {
-    font-size: 14px;
-    color: #777;
-  }
-  
-  .post-edit-actions {
-    margin-top: 10px;
-  }
-  
-  .comments-section {
-    display: flex;
-    flex-direction: column;
-    max-height: 200px; /* גובה קבוע למנוע יציאה מהמסך */
-    overflow: hidden;
-  }
-  
-  .comments-list {
-    flex-grow: 1;
-    max-height: 100px; /* הגבלת הגובה של הרשימה */
-    overflow-y: auto; /* הפעלת גלילה אנכית */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .add-comment textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-  }
-  
-  .add-comment button {
-    padding: 5px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
-  .close-btn {
-    padding: 10px;
-    background-color: #f1f1f1;
-    border: none;
-    cursor: pointer;
-  }
-  
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.post-user {
+  font-weight: bold;
+  color: #0073e6;
+}
+
+.post-details-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+.post-quote {
+  font-size: 18px;
+  font-style: italic;
+  color: #555;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.post-edit-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 3%;
+  padding-bottom: 5%;
+}
+
+.comments-section {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.comments-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.comment {
+  background: white;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-user {
+  font-weight: bold;
+  color: #0073e6;
+}
+
+.add-comment {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.add-comment textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+.add-comment button {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  border: none;
+  transition: 0.3s;
+}
+
+.add-comment button:hover {
+  background-color: #218838;
+}

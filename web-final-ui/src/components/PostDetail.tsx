@@ -6,6 +6,7 @@ import { Post } from '../services/intefaces/post';
 import { Comment } from '../services/intefaces/comment';
 import { useNavigate, useParams } from 'react-router-dom';
 import PostActions from './PostActions';
+import "../styles/PostDetails.css";
 
 const PostDetail: React.FC = () => {
   const postId = useParams<{ postId: string }>().postId || "";
@@ -101,18 +102,22 @@ const PostDetail: React.FC = () => {
 
   return (
     <div className="post-detail-container">
-      <button onClick={() => navigate(-1)}>Close</button>
+       <div className="post-edit-actions">
+        <button className="close-post-button" onClick={() => navigate(-1)}>X</button>
+        {post.userId === currentUserId && !isEditing && <button className="edit-action-button" onClick={handleEditPost}>Edit</button>}
+        {post.userId === currentUserId && !isEditing && <button className="edit-action-button" onClick={handleDeletePost}>Delete</button>}
+       </div>
       <div className="post-header">
         <span className="post-user">@{post.username}</span>
       </div>
 
       {isEditing ? (
         <div>
-          <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-image" />
+          <img src={editedImage ? URL.createObjectURL(editedImage) : post.file} alt="Post" className="post-details-image" />
           <input type="file" accept="image/*" onChange={handleImageChange} />
           <textarea value={editedText} onChange={(e) => setEditedText(e.target.value)} />
-          <button onClick={handleSaveEdit}>Save</button>
-          <button onClick={handleCancelEdit}>Cancel</button>
+          <button className="edit-action-button" onClick={handleSaveEdit}>Save</button>
+          <button className="edit-action-button" onClick={handleCancelEdit}>Cancel</button>
         </div>
       ) : (
         <div>
@@ -122,14 +127,7 @@ const PostDetail: React.FC = () => {
       )}
 
       <PostActions post={post} currentUserId={currentUserId} onLikeToggle={handleLikeToggle} />
-
-      {post.userId === currentUserId && !isEditing && (
-        <div className="post-edit-actions">
-          <button onClick={handleEditPost}>Edit</button>
-          <button onClick={handleDeletePost}>Delete</button>
-        </div>
-      )}
-
+      
       <div className="comments-section">
         <div className="comments-list">
           {comments.map((comment) => (
@@ -146,7 +144,7 @@ const PostDetail: React.FC = () => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
           />
-          <button onClick={handleCommentSubmit}>Post Comment</button>
+          <button className="edit-action-button" onClick={handleCommentSubmit}>Post Comment</button>
           </div>
       </div>
     </div>
