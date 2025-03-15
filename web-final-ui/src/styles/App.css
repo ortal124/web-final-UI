@@ -8,8 +8,36 @@
   }
   
   .content {
-    margin-left: 250px; 
     flex-grow: 1;
     padding: 20px;
+  }
+
+  body{
+    background-image: radial-gradient(circle, #b7ece0 10%, #ffffff 90%);
+  }
+
+  .edit-action-button {
+    background-color: #0073e6;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: none;
+    font-size: 14px;
+    margin-top: 2%;
+  }
+  
+  .edit-action-button:hover {
+    background-color: #005bb5;
+  }
+  
+  .edit-action-button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+
+  .edit-action-button:disabled:hover {
+    background-color: rgb(69, 69, 69);
   }
   

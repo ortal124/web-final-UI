@@ -6,6 +6,7 @@ import userService from "../services/user_service";
 import commentsService from "../services/comments_service";
 import { useNavigate } from "react-router-dom";
 import PostActions from "./PostActions";
+import Contact from "./Contact";
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -116,27 +117,29 @@ const Feed: React.FC = () => {
   };
 
   return (
-    <div className="feed-container">
-      {posts.map((post, index) => {
-        const isLastPost = index === posts.length - 1;
-        return(
-          <div key={post._id}
-               className="post-card"
-               ref={isLastPost ? lastPostRef : null}>
-            <div className="post-header">
-              <span className="post-user">@{post.username}</span>
+  <div style={{ display: 'flex' }}>
+      <Contact />
+      <div className="feed-container">
+        {posts.map((post, index) => {
+          const isLastPost = index === posts.length - 1;
+          return(
+            <div key={post._id}
+                className="post-card"
+                ref={isLastPost ? lastPostRef : null}>
+              <div className="post-header">
+                <span className="post-user">@{post.username}</span>
+              </div>
+              <img src={post.file} alt="Post" className="post-image" onClick={() => handlePostClick(post._id!!)}/>
+              <p className="post-quote">"{post.text}"</p>
+              <PostActions
+                post={post}
+                currentUserId={currentUser}
+                onLikeToggle={() => post._id && toggleLike(post._id)}
+              />
             </div>
-            <img src={post.file} alt="Post" className="post-image" onClick={() => handlePostClick(post._id!!)}/>
-            <p className="post-quote">"{post.text}"</p>
-
-            <PostActions
-              post={post}
-              currentUserId={currentUser}
-              onLikeToggle={() => post._id && toggleLike(post._id)}
-            />
-          </div>
-     )})}
-      {loading && <p>טוען עוד פוסטים...</p>}
+      )})}
+        {loading && <p>טוען עוד פוסטים...</p>}
+      </div>
     </div>
   );
 };
