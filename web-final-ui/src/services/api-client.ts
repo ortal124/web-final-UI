@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_BACKEND_URL;
+
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL
 });
 
 api.interceptors.request.use((config) => {
@@ -24,7 +26,7 @@ api.interceptors.response.use(
         }
   
         try {
-          const { data } = await axios.post("http://localhost:3000/auth/refresh", { refreshToken });
+          const { data } = await axios.post(baseURL + "/auth/refresh", { refreshToken });
           localStorage.setItem("accessToken", data.accessToken);
           error.config.headers.Authorization = `Bearer ${data.accessToken}`;
           return axios(error.config); 
